@@ -8,7 +8,7 @@ export default function Header() {
     } )
     return (
         <header className={styles.headerContainer}>
-            <img src="./assets/images/logo.svg" alt="Logo" />
+            <img src="/assets/images/logo.svg" alt="Logo" />
             <p>O melhor para ouvir, sempre!</p>
             <span>{currentDate} </span>
         </header>
