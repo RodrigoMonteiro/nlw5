@@ -15,6 +15,8 @@ import Image from 'next/image'
 import { tr } from 'date-fns/locale'
 
 import Link from 'next/link'
+import { useContext } from 'react'
+import { PlayerContext } from '../contexts/PlayerContext'
 
 
 
@@ -36,6 +38,8 @@ type HomeProps = {
 
 export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
 
+  const { play } = useContext(PlayerContext)
+
   //Para SPAs é utilizado o hoock useEffect.
 
   // Anatomia
@@ -51,21 +55,21 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
     <div className={styles.homepage}>
 
       <section className={styles.latestEpisodes}>
-        <h2>últimos laçamentos</h2>
+        <h2>últimos laçamentos </h2>
         <ul>
           {latestEpisodes.map(episode => {
             return (
               <li key={episode.id}>
                 <Image width={192} height={192} src={episode.thumbnail} alt="episode.title" objectFit="cover" />
                 <div className={styles.episodeDetails}>
-                 <Link href={`/episodes/${episode.id}`}>
-                 <a>{episode.title}</a>
-                 </Link>
+                  <Link href={`/episodes/${episode.id}`}>
+                    <a>{episode.title}</a>
+                  </Link>
                   <p>{episode.members}</p>
                   <span>{episode.publishedAt}</span>
                   <span>{episode.durationAsString}</span>
                 </div>
-                <button type="button">
+                <button type="button" onClick={() => play(episode)}>
                   <img src="./assets/images/play-green.svg" alt="Tocar episodio" />
                 </button>
               </li>
@@ -78,20 +82,20 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
         <h2>Todos episódios</h2>
         <table cellSpacing={0}>
           <thead>
-           <tr>
-           <th></th>
-            <th>Podcast</th>
-            <th>Integrantes</th>
-            <th>Data</th>
-            <th>Duração</th>
-            <th></th>
-           </tr>
+            <tr>
+              <th></th>
+              <th>Podcast</th>
+              <th>Integrantes</th>
+              <th>Data</th>
+              <th>Duração</th>
+              <th></th>
+            </tr>
           </thead>
           <tbody>
             {allEpisodes.map(episode => {
               return (
                 <tr key={episode.id}>
-                  <td style={{width: 72}}>
+                  <td style={{ width: 72 }}>
                     <Image
                       width={120}
                       height={120}
@@ -101,16 +105,16 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
                   </td>
                   <td>
                     <Link href={`/episodes/${episode.id}`}>
-                    <a >{episode.title}</a>
+                      <a >{episode.title}</a>
                     </Link>
                   </td>
                   <td>{episode.members}</td>
-                  <td style={{width: 100}}>{episode.publishedAt}</td>
+                  <td style={{ width: 100 }}>{episode.publishedAt}</td>
                   <td>{episode.durationAsString}</td>
                   <td>
                     <button type="button">
-                    <img src="/assets/images/play-green.svg" alt="Tocar episódio" />
-                  </button>
+                      <img src="/assets/images/play-green.svg" alt="Tocar episódio" />
+                    </button>
                   </td>
                 </tr>
               )

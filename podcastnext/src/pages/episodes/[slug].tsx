@@ -26,6 +26,9 @@ type EpisodeProps = {
 }
 export default function Episode({ episode }: EpisodeProps) {
     const router = useRouter()
+    if (router.isFallback){
+        return <p>Carregando...</p>
+    }
     return (
       <div className={styles.episode}>
           <div className={styles.thumbnailContainer}>
@@ -57,6 +60,8 @@ export const getStaticPaths: GetStaticPaths = async () => { return {
     paths:[],
     fallback: 'blocking'
 }}
+
+
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const { slug } = ctx.params
 
