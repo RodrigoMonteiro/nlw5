@@ -7,6 +7,8 @@ import { convertDurationToTimeString } from '../../utils/convetDurationToTimeStr
 import styles from './episode.module.scss'
 import Image from 'next/image'
 import Link from 'next/link'
+import Head from 'next/head'
+import { usePlayer } from '../../contexts/PlayerContext'
 
 type Episode = {
     id: string,
@@ -25,41 +27,50 @@ type EpisodeProps = {
     episode: Episode
 }
 export default function Episode({ episode }: EpisodeProps) {
+    const { play } = usePlayer()
+
     const router = useRouter()
-    if (router.isFallback){
+    if (router.isFallback) {
         return <p>Carregando...</p>
     }
-    return (
-      <div className={styles.episode}>
-          <div className={styles.thumbnailContainer}>
-              <Link href="/">
-              <button type="button">
-                  <img src="/assets/images/arrow-left.svg" alt="Voltar"/>
-              </button>
-              </Link>
-                  <Image width={700} height={160} src={episode.thumbnail} objectFit="cover"></Image>
-                  <button type="button">
-                      <img src="/assets/images/play.svg" alt="Tocar episódio"/>
-                  </button>
-          </div>
-          <header>
-              <h1>{episode.title}</h1>
-              <span>{episode.members}</span>
-              <span>{episode.publishedAt}</span>
-              <span>{episode.durationAsString}</span>
-          </header>
 
-          <div className={styles.description}dangerouslySetInnerHTML={{__html: episode.description }}/>
-          
-      </div>
+
+    return (
+        <div className={styles.episode}>
+            <Head>
+                <title>{episode.title} | Podcastr</title>
+            </Head>
+            <div className={styles.thumbnailContainer}>
+                <Link href="/">
+                    <button type="button">
+                        <img src="/assets/images/arrow-left.svg" alt="Voltar" />
+                    </button>
+                </Link>
+                <Image width={700} height={160} src={episode.thumbnail} objectFit="cover"></Image>
+                <button type="button" onClick={() => play(episode)}>
+                    <img src="/assets/images/play.svg" alt="Tocar episódio" />
+                </button>
+            </div>
+            <header>
+                <h1>{episode.title}</h1>
+                <span>{episode.members}</span>
+                <span>{episode.publishedAt}</span>
+                <span>{episode.durationAsString}</span>
+            </header>
+
+            <div className={styles.description} dangerouslySetInnerHTML={{ __html: episode.description }} />
+
+        </div>
     )
 }
 
 
-export const getStaticPaths: GetStaticPaths = async () => { return {
-    paths:[],
-    fallback: 'blocking'
-}}
+export const getStaticPaths: GetStaticPaths = async () => {
+    return {
+        paths: [],
+        fallback: 'blocking'
+    }
+}
 
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
